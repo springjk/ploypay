@@ -117,8 +117,14 @@ class Client
         $bizContent = [
             'merId' => $this->config['mer_id'],
             'userId' => $this->config['user_id'],
-            'notifyUrl' => app()->request->domain() .$this->config['notify_url'],
+            'notifyUrl' => $this->config['notify_url'],
         ];
+
+        # 新版本查询订单时不允许传入额外的 notifyUrl 参数
+        if (!empty($params['orderId'])) {
+            unset($bizContent['notifyUrl']);
+        }
+
         $params = array_filter(array_merge($bizContent, $params), 'strlen'); 
         ksort($params);
         return  json_encode($params,JSON_UNESCAPED_SLASHES);
