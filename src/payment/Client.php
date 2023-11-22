@@ -106,7 +106,15 @@ class Client
             $params['respCode'] = 'SUCCESS';
         }
 
-        $data = $this->bizContent($params, false);
+        $data = [
+            'biz_content' => $this->bizContent($params),
+            'encoding' => 'UTF-8',//编码方式，固定为UTF-8(必传)
+            'signMethod' => '02', //签名方法，固定为01，表示签名方式为RSA2(必传)
+            'version' => '0.0.1',//版本号，固定为0.0.1(必传字段)
+        ];
+
+        $sign = $this->sign($data);
+        $data['sign'] = $sign;
 
         return $data;
     }
