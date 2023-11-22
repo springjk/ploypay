@@ -98,20 +98,18 @@ class Client
 
     public function notifyResponse($return_code = 'success')
     {
-        $params = [
-            'returnCode' => $return_code ? 'SUCCESS' : 'FAIL',
-        ];
-
-        if ($return_code == 'success') {
-            $params['respCode'] = 'SUCCESS';
-        }
-
         $data = [
-            'biz_content' => $this->bizContent($params),
+            'returnCode' => $return_code ? 'SUCCESS' : 'FAIL',
             'encoding' => 'UTF-8',//编码方式，固定为UTF-8(必传)
             'signMethod' => '02', //签名方法，固定为01，表示签名方式为RSA2(必传)
             'version' => '0.0.1',//版本号，固定为0.0.1(必传字段)
         ];
+
+        if ($return_code == 'success') {
+            $data['respCode'] = 'SUCCESS';
+        }
+
+        ksort($data);
 
         $sign = $this->sign($data);
         $data['sign'] = $sign;
